@@ -6,18 +6,41 @@ An interactive tool for creating AI agent personas using behavioral and psycholo
 
 ## Quick Start
 
+### Live Demo
+
+**🌐 [View Live Demo on GitHub Pages](https://raymassie.github.io/persona-machine/)**
+
+The application is hosted on GitHub Pages and ready to use immediately. No installation required!
+
+### Local Development
+
 **Important:** This app must be run from a web server, not opened directly as a file (file:// protocol won't work due to CORS).
 
-### Option 1: Python HTTP Server
+#### Option 1: Python HTTP Server
 ```bash
 cd persona-machine
 python3 -m http.server 8000
 ```
 Then open: http://localhost:8000
 
-### Option 2: Any Other Web Server
+#### Option 2: Any Other Web Server
 - Use any local web server (Node.js http-server, PHP built-in server, etc.)
 - Just make sure it serves the files with proper CORS headers
+
+### Deploy to GitHub Pages
+
+To deploy your own copy to GitHub Pages:
+
+1. **Fork or clone this repository**
+2. **Enable GitHub Pages** in your repository settings:
+   - Go to Settings → Pages
+   - Source: Deploy from a branch
+   - Branch: `master` (or `main`)
+   - Folder: `/ (root)`
+   - Click Save
+3. **Your site will be live at**: `https://[your-username].github.io/persona-machine/`
+
+The app works automatically on GitHub Pages since it's a static site with no build process required.
 
 ## Overview
 
