@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<!--
+Persona Engine - AI Agent Personality Builder
+Copyright (c) 2025 Ray Massie
+
+Build custom AI agent personas using behavioral and psychological trait frameworks
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona Engine - AI Agent Personality Builder</title>
+    <meta name="description" content="Build custom AI agent personas using behavioral and psychological trait frameworks from Behavioral Humanism research.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Persona Engine</h1>
+            <p>Build custom AI agent personalities</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Builder Panel -->
+            <div class="builder-panel">
+                <div class="panel-header">
+                    <h2>Personality Parameters</h2>
+                    <div class="panel-actions">
+                        <button id="random-btn" class="btn-action">RANDOM</button>
+                        <button id="clear-all-btn" class="btn-action">CLEAR ALL</button>
+                    </div>
+                </div>
+
+                <div class="builder-content">
+                    <!-- Core Personality Section -->
+                    <div class="category-section" data-category="core">
+                        <div class="category-header" onclick="toggleCategory('core')">
+                            <span>Core Personality</span>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="category-content" id="core-content">
+                            <div class="trait-group">
+                                <label>Personality Dimensions</label>
+                                <div class="slider-group">
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Passive</span>
+                                            <span>Assertive</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="personality-slider" id="personality-passive-assertive" min="0" max="100" value="50" data-dimension="passive_assertive">                                        </div>
+                                    </div>
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Pessimistic</span>
+                                            <span>Optimistic</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="personality-slider" id="personality-pessimistic-optimistic" min="0" max="100" value="50" data-dimension="pessimistic_optimistic">                                        </div>
+                                    </div>
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Closed-minded</span>
+                                            <span>Open-minded</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="personality-slider" id="personality-closed-open" min="0" max="100" value="50" data-dimension="closed_open">                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Primary Traits</label>
+                                <div class="trait-selector" data-field="primary_traits">
+                                    <input type="text" class="trait-search" placeholder="Search traits..." data-search="primary_traits">
+                                    <div class="trait-options" id="primary_traits-options"></div>
+                                    <div class="selected-traits" id="primary_traits-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Cognitive Style</label>
+                                <div class="trait-selector" data-field="cognitive_style" data-single-select="true">
+                                    <input type="text" class="trait-search" placeholder="Search cognitive styles..." data-search="cognitive_style">
+                                    <div class="trait-options" id="cognitive_style-options"></div>
+                                    <div class="selected-traits" id="cognitive_style-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Core Motivations</label>
+                                <div class="trait-selector" data-field="core_motivations">
+                                    <input type="text" class="trait-search" placeholder="Search motivations..." data-search="core_motivations">
+                                    <div class="trait-options" id="core_motivations-options"></div>
+                                    <div class="selected-traits" id="core_motivations-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Decision Making Framework</label>
+                                <textarea class="trait-textarea" data-field="decision_making_framework" placeholder="Describe the decision-making approach (e.g., analytical reasoning with systematic evaluation, or intuitive judgment based on experience)"></textarea>
+                                <div class="textarea-hint">Enter a description of how decisions are made</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Communication Style Section -->
+                    <div class="category-section" data-category="communication">
+                        <div class="category-header" onclick="toggleCategory('communication')">
+                            <span>Communication Style</span>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="category-content" id="communication-content">
+                            <div class="trait-group">
+                                <label>Communication Tone Dimensions</label>
+                                <div class="slider-group">
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Formal</span>
+                                            <span>Casual</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="tone-slider" id="tone-formal-casual" min="0" max="100" value="50" data-dimension="formal_casual">                                        </div>
+                                    </div>
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Serious</span>
+                                            <span>Funny</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="tone-slider" id="tone-serious-funny" min="0" max="100" value="0" data-dimension="serious_funny">                                        </div>
+                                    </div>
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Respectful</span>
+                                            <span>Irreverent</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="tone-slider" id="tone-respectful-irreverent" min="0" max="100" value="0" data-dimension="respectful_irreverent">                                        </div>
+                                    </div>
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Matter-of-fact</span>
+                                            <span>Enthusiastic</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="tone-slider" id="tone-matter-enthusiastic" min="0" max="100" value="0" data-dimension="matter_enthusiastic">                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tone-preview">
+                                    <div class="preview-label">Example Message:</div>
+                                    <div class="preview-text" id="tone-preview-text">We apologize, but we are experiencing a problem.</div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Additional Communication Traits</label>
+                                <div class="trait-selector" data-field="communication_tone">
+                                    <input type="text" class="trait-search" placeholder="Search additional tones..." data-search="communication_tone">
+                                    <div class="trait-options" id="communication_tone-options"></div>
+                                    <div class="selected-traits" id="communication_tone-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Sentence Structure</label>
+                                <div class="trait-selector" data-field="communication_sentence_structure">
+                                    <input type="text" class="trait-search" placeholder="Search structures..." data-search="communication_sentence_structure">
+                                    <div class="trait-options" id="communication_sentence_structure-options"></div>
+                                    <div class="selected-traits" id="communication_sentence_structure-selected"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Behavioral Patterns Section -->
+                    <div class="category-section" data-category="behavioral">
+                        <div class="category-header" onclick="toggleCategory('behavioral')">
+                            <span>Behavioral Patterns</span>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="category-content" id="behavioral-content">
+                            <div class="trait-group">
+                                <label>Behavioral Dimensions</label>
+                                <div class="slider-group">
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Concise</span>
+                                            <span>Detailed</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="behavioral-slider" id="behavioral-concise-detailed" min="0" max="100" value="50" data-dimension="concise_detailed">                                        </div>
+                                    </div>
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Conservative</span>
+                                            <span>Risk-taking</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="behavioral-slider" id="behavioral-conservative-risk" min="0" max="100" value="50" data-dimension="conservative_risk">                                        </div>
+                                    </div>
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Deliberate</span>
+                                            <span>Quick</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="behavioral-slider" id="behavioral-deliberate-quick" min="0" max="100" value="50" data-dimension="deliberate_quick">                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Work Style</label>
+                                <div class="trait-selector" data-field="work_style">
+                                    <input type="text" class="trait-search" placeholder="Search work styles..." data-search="work_style">
+                                    <div class="trait-options" id="work_style-options"></div>
+                                    <div class="selected-traits" id="work_style-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Problem Solving Approach</label>
+                                <div class="trait-selector" data-field="problem_solving_approach">
+                                    <input type="text" class="trait-search" placeholder="Search approaches..." data-search="problem_solving_approach">
+                                    <div class="trait-options" id="problem_solving_approach-options"></div>
+                                    <div class="selected-traits" id="problem_solving_approach-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Learning Style</label>
+                                <div class="trait-selector" data-field="learning_style">
+                                    <input type="text" class="trait-search" placeholder="Search learning styles..." data-search="learning_style">
+                                    <div class="trait-options" id="learning_style-options"></div>
+                                    <div class="selected-traits" id="learning_style-selected"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Values Section -->
+                    <div class="category-section" data-category="values">
+                        <div class="category-header" onclick="toggleCategory('values')">
+                            <span>Values & Ethics</span>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="category-content" id="values-content">
+                            <div class="trait-group">
+                                <label>Core Values</label>
+                                <div class="trait-selector" data-field="core_values">
+                                    <input type="text" class="trait-search" placeholder="Search values..." data-search="core_values">
+                                    <div class="trait-options" id="core_values-options"></div>
+                                    <div class="selected-traits" id="core_values-selected"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Behavioral Humanism Section -->
+                    <div class="category-section" data-category="humanism">
+                        <div class="category-header" onclick="toggleCategory('humanism')">
+                            <span>Behavioral Humanism</span>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="category-content" id="humanism-content">
+                            <div class="trait-group">
+                                <label>Bias Awareness</label>
+                                <div class="trait-selector" data-field="bias_awareness">
+                                    <input type="text" class="trait-search" placeholder="Search biases..." data-search="bias_awareness">
+                                    <div class="trait-options" id="bias_awareness-options"></div>
+                                    <div class="selected-traits" id="bias_awareness-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Growth Motivation</label>
+                                <div class="trait-selector" data-field="growth_motivation">
+                                    <input type="text" class="trait-search" placeholder="Search motivations..." data-search="growth_motivation">
+                                    <div class="trait-options" id="growth_motivation-options"></div>
+                                    <div class="selected-traits" id="growth_motivation-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Cognitive Humanism</label>
+                                <div class="trait-selector" data-field="cognitive_humanism">
+                                    <input type="text" class="trait-search" placeholder="Search expressions..." data-search="cognitive_humanism">
+                                    <div class="trait-options" id="cognitive_humanism-options"></div>
+                                    <div class="selected-traits" id="cognitive_humanism-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Humanistic Cognition</label>
+                                <div class="trait-selector" data-field="humanistic_cognition">
+                                    <input type="text" class="trait-search" placeholder="Search approaches..." data-search="humanistic_cognition">
+                                    <div class="trait-options" id="humanistic_cognition-options"></div>
+                                    <div class="selected-traits" id="humanistic_cognition-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Self-Actualization</label>
+                                <div class="trait-selector" data-field="self_actualization">
+                                    <input type="text" class="trait-search" placeholder="Search indicators..." data-search="self_actualization">
+                                    <div class="trait-options" id="self_actualization-options"></div>
+                                    <div class="selected-traits" id="self_actualization-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Behavioral Growth</label>
+                                <div class="trait-selector" data-field="behavioral_growth">
+                                    <input type="text" class="trait-search" placeholder="Search patterns..." data-search="behavioral_growth">
+                                    <div class="trait-options" id="behavioral_growth-options"></div>
+                                    <div class="selected-traits" id="behavioral_growth-selected"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tier 1: Modern Dimensions -->
+                    <div class="category-section" data-category="tier1">
+                        <div class="category-header" onclick="toggleCategory('tier1')">
+                            <span>Modern Dimensions (Tier 1)</span>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="category-content" id="tier1-content">
+                            <div class="trait-group">
+                                <label>Technology Adoption</label>
+                                <div class="slider-group">
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Resistant</span>
+                                            <span>Early Adopter</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="tier1-slider" id="technology-adoption-slider" min="0" max="100" value="50" data-dimension="technology_adoption">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Crisis Response</label>
+                                <div class="trait-selector" data-field="crisis_response" data-single-select="true">
+                                    <input type="text" class="trait-search" placeholder="Search crisis responses..." data-search="crisis_response">
+                                    <div class="trait-options" id="crisis_response-options"></div>
+                                    <div class="selected-traits" id="crisis_response-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Influence Style</label>
+                                <div class="trait-selector" data-field="influence_style" data-single-select="true">
+                                    <input type="text" class="trait-search" placeholder="Search influence styles..." data-search="influence_style">
+                                    <div class="trait-options" id="influence_style-options"></div>
+                                    <div class="selected-traits" id="influence_style-selected"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tier 2: Interpersonal Dimensions -->
+                    <div class="category-section" data-category="tier2">
+                        <div class="category-header" onclick="toggleCategory('tier2')">
+                            <span>Interpersonal Dimensions (Tier 2)</span>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="category-content" id="tier2-content">
+                            <div class="trait-group">
+                                <label>Resource Relationship</label>
+                                <div class="trait-selector" data-field="resource_relationship" data-single-select="true">
+                                    <input type="text" class="trait-search" placeholder="Search resource relationships..." data-search="resource_relationship">
+                                    <div class="trait-options" id="resource_relationship-options"></div>
+                                    <div class="selected-traits" id="resource_relationship-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Time Orientation</label>
+                                <div class="trait-selector" data-field="time_orientation" data-single-select="true">
+                                    <input type="text" class="trait-search" placeholder="Search time orientations..." data-search="time_orientation">
+                                    <div class="trait-options" id="time_orientation-options"></div>
+                                    <div class="selected-traits" id="time_orientation-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Collaboration Style</label>
+                                <div class="trait-selector" data-field="collaboration_style" data-single-select="true">
+                                    <input type="text" class="trait-search" placeholder="Search collaboration styles..." data-search="collaboration_style">
+                                    <div class="trait-options" id="collaboration_style-options"></div>
+                                    <div class="selected-traits" id="collaboration_style-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Interpersonal Dimensions</label>
+                                <div class="slider-group">
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Low Empathy</span>
+                                            <span>High Empathy</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="interpersonal-slider" id="interpersonal-empathy" min="0" max="100" value="50" data-dimension="empathy">                                        </div>
+                                    </div>
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Impatient</span>
+                                            <span>Patient</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="interpersonal-slider" id="interpersonal-patience" min="0" max="100" value="50" data-dimension="patience">                                        </div>
+                                    </div>
+                                    <div class="slider-dimension">
+                                        <div class="slider-labels">
+                                            <span>Calm</span>
+                                            <span>Energetic</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="interpersonal-slider" id="interpersonal-energy" min="0" max="100" value="50" data-dimension="energy">                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Leadership Style</label>
+                                <div class="trait-selector" data-field="leadership_style">
+                                    <input type="text" class="trait-search" placeholder="Search leadership styles..." data-search="leadership_style">
+                                    <div class="trait-options" id="leadership_style-options"></div>
+                                    <div class="selected-traits" id="leadership_style-selected"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stress & Blind Spots -->
+                    <div class="category-section" data-category="stress">
+                        <div class="category-header" onclick="toggleCategory('stress')">
+                            <span>Stress Responses & Blind Spots</span>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="category-content" id="stress-content">
+                            <div class="trait-group">
+                                <label>Stress Responses</label>
+                                <div class="trait-selector" data-field="stress_responses">
+                                    <input type="text" class="trait-search" placeholder="Search responses..." data-search="stress_responses">
+                                    <div class="trait-options" id="stress_responses-options"></div>
+                                    <div class="selected-traits" id="stress_responses-selected"></div>
+                                </div>
+                            </div>
+                            <div class="trait-group">
+                                <label>Blind Spots</label>
+                                <div class="trait-selector" data-field="blind_spots">
+                                    <input type="text" class="trait-search" placeholder="Search blind spots..." data-search="blind_spots">
+                                    <div class="trait-options" id="blind_spots-options"></div>
+                                    <div class="selected-traits" id="blind_spots-selected"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="preview-panel">
+                <div class="panel-header">
+                    <h2>Generate Persona</h2>
+                    <div class="format-toggles">
+                        <div class="format-option">
+                            <div class="radio-button checked" data-format="markdown">
+                                <div class="radio-outer"></div>
+                                <div class="radio-inner"></div>
+                            </div>
+                            <label for="format-markdown">MARKDOWN</label>
+                        </div>
+                        <div class="format-option">
+                            <div class="radio-button" data-format="json">
+                                <div class="radio-outer"></div>
+                                <div class="radio-inner"></div>
+                            </div>
+                            <label for="format-json">JSON</label>
+                        </div>
+                        <div class="format-option">
+                            <div class="radio-button" data-format="yaml">
+                                <div class="radio-outer"></div>
+                                <div class="radio-inner"></div>
+                            </div>
+                            <label for="format-yaml">YAML</label>
+                        </div>
+                        <button id="copy-btn" class="btn-action" disabled>COPY</button>
+                        <button id="download-btn" class="btn-action" disabled>DOWNLOAD</button>
+                    </div>
+                </div>
+                <div class="preview-content" id="preview-content">
+                    <div class="preview-placeholder">
+                        <p>Select personality parameters to generate your persona</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
