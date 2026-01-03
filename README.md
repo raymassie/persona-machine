@@ -44,7 +44,7 @@ The app works automatically on GitHub Pages since it's a static site with no bui
 
 ## Overview
 
-Persona Engine allows you to construct detailed personality profiles for AI agents by selecting from comprehensive trait categories. The tool generates ready-to-use persona instructions in Markdown, JSON, or YAML formats.
+Persona Machine allows you to construct detailed personality profiles for AI agents by selecting from comprehensive trait categories. The tool generates ready-to-use persona instructions in Markdown, JSON, or YAML formats.
 
 ## Features
 
