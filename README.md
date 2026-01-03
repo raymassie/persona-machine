@@ -1,4 +1,4 @@
-# Persona Engine
+# Persona Machine
 
 **Build custom AI agent personalities**
 
@@ -10,7 +10,7 @@ An interactive tool for creating AI agent personas using behavioral and psycholo
 
 ### Option 1: Python HTTP Server
 ```bash
-cd persona-engine
+cd persona-machine
 python3 -m http.server 8000
 ```
 Then open: http://localhost:8000
@@ -134,7 +134,7 @@ Trait data is extracted from the Influence Atlas project, which contains 324 pro
 ## File Structure
 
 ```
-persona-engine/
+persona-machine/
 ├── index.html                  # Main application HTML
 ├── styles.css                  # Application styling
 ├── app.js                      # Application logic (trait loading, grouping, UI, export)
