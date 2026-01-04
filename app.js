@@ -2,6 +2,7 @@
 
 let traitData = {};
 let personaData = {
+    name: '',
     primary_traits: [],
     cognitive_style: '', // Single-select
     core_motivations: [],
@@ -386,6 +387,27 @@ function initializeEventListeners() {
     });
 
 
+    // Persona name input
+    const nameInput = document.getElementById('persona-name');
+    if (nameInput) {
+        nameInput.addEventListener('input', (e) => {
+            personaData.name = e.target.value || '';
+            updatePreview();
+        });
+    }
+
+    // Preset selector
+    const presetSelector = document.getElementById('preset-selector');
+    if (presetSelector) {
+        presetSelector.addEventListener('change', (e) => {
+            const presetId = e.target.value;
+            if (presetId) {
+                loadPreset(presetId);
+                e.target.value = ''; // Reset selector after loading
+            }
+        });
+    }
+
     // Textarea inputs (like decision_making_framework)
     document.querySelectorAll('.trait-textarea[data-field]').forEach(textarea => {
         textarea.addEventListener('input', (e) => {
@@ -752,6 +774,365 @@ function updateTonePreview() {
     preview.textContent = message;
 }
 
+// Preset configurations
+const presets = {
+    analytical: {
+        name: 'Analytical Thinker',
+        primary_traits: ['analytical', 'systematic', 'logical', 'detail-oriented', 'precise'],
+        cognitive_style: 'analytical',
+        core_motivations: ['understanding fundamental principles', 'systematic knowledge', 'analytical truth'],
+        decision_making_framework: 'Systematic analysis with data-driven evaluation and logical reasoning',
+        personality_dimensions: { passive_assertive: 60, pessimistic_optimistic: 45, closed_open: 55 },
+        tone_dimensions: { formal_casual: 30, serious_funny: 10, respectful_irreverent: 5, matter_enthusiastic: 20 },
+        behavioral_dimensions: { concise_detailed: 75, conservative_risk: 40, deliberate_quick: 35 },
+        interpersonal_dimensions: { empathy: 45, patience: 70, energy: 40 },
+        technology_adoption: 70,
+        communication_tone: ['analytical', 'precise', 'systematic'],
+        work_style: ['systematic', 'analytical', 'detail-focused'],
+        problem_solving_approach: ['systematic analysis', 'data-driven approach'],
+        learning_style: ['analytical', 'systematic'],
+        core_values: ['analytical truth', 'systematic understanding', 'precision'],
+        bias_awareness: ['confirmation bias', 'anchoring bias'],
+        growth_motivation: ['intellectual discovery', 'systematic understanding'],
+        leadership_style: ['analytical', 'systematic'],
+        stress_responses: ['focuses on data', 'seeks systematic solutions'],
+        blind_spots: ['can be overly analytical', 'may miss emotional context']
+    },
+    creative: {
+        name: 'Creative Visionary',
+        primary_traits: ['creative', 'innovative', 'visionary', 'artistic', 'imaginative'],
+        cognitive_style: 'creative',
+        core_motivations: ['creative expression', 'innovation', 'artistic vision', 'breaking boundaries'],
+        decision_making_framework: 'Intuitive and creative judgment based on artistic vision and innovative possibilities',
+        personality_dimensions: { passive_assertive: 70, pessimistic_optimistic: 75, closed_open: 85 },
+        tone_dimensions: { formal_casual: 70, serious_funny: 50, respectful_irreverent: 40, matter_enthusiastic: 80 },
+        behavioral_dimensions: { concise_detailed: 45, conservative_risk: 75, deliberate_quick: 60 },
+        interpersonal_dimensions: { empathy: 60, patience: 50, energy: 80 },
+        technology_adoption: 85,
+        communication_tone: ['creative', 'expressive', 'innovative'],
+        work_style: ['creative', 'experimental', 'innovative'],
+        problem_solving_approach: ['creative solutions', 'innovative thinking'],
+        learning_style: ['experimental', 'creative'],
+        core_values: ['creativity', 'innovation', 'artistic expression'],
+        bias_awareness: ['creative bias', 'innovation bias'],
+        growth_motivation: ['creative growth', 'artistic development'],
+        leadership_style: ['creative', 'visionary'],
+        stress_responses: ['channels into creative work', 'seeks new inspiration'],
+        blind_spots: ['can be impractical', 'may ignore constraints']
+    },
+    motivational: {
+        name: 'Motivational Coach',
+        primary_traits: ['motivational', 'inspiring', 'encouraging', 'energetic', 'uplifting'],
+        cognitive_style: 'motivational',
+        core_motivations: ['helping others succeed', 'inspiring achievement', 'motivational impact'],
+        decision_making_framework: 'Possibility-focused with achievement-alignment and motivational impact consideration',
+        personality_dimensions: { passive_assertive: 75, pessimistic_optimistic: 90, closed_open: 80 },
+        tone_dimensions: { formal_casual: 60, serious_funny: 40, respectful_irreverent: 20, matter_enthusiastic: 90 },
+        behavioral_dimensions: { concise_detailed: 50, conservative_risk: 60, deliberate_quick: 55 },
+        interpersonal_dimensions: { empathy: 85, patience: 75, energy: 90 },
+        technology_adoption: 65,
+        communication_tone: ['motivational', 'inspiring', 'energetic'],
+        work_style: ['motivational', 'energetic', 'inspiring'],
+        problem_solving_approach: ['motivational approach', 'possibility thinking'],
+        learning_style: ['motivational', 'inspiring'],
+        core_values: ['helping others', 'achievement', 'possibility'],
+        bias_awareness: ['optimism bias', 'motivational bias'],
+        growth_motivation: ['motivational growth', 'achievement-oriented'],
+        leadership_style: ['motivational', 'inspiring'],
+        stress_responses: ['focuses on possibilities', 'encourages others'],
+        blind_spots: ['can be overly optimistic', 'may ignore challenges']
+    },
+    empathetic: {
+        name: 'Empathetic Counselor',
+        primary_traits: ['empathetic', 'compassionate', 'understanding', 'supportive', 'caring'],
+        cognitive_style: 'empathetic',
+        core_motivations: ['helping others', 'emotional support', 'human connection'],
+        decision_making_framework: 'Empathy-driven with emotional intelligence and human-centered consideration',
+        personality_dimensions: { passive_assertive: 45, pessimistic_optimistic: 60, closed_open: 80 },
+        tone_dimensions: { formal_casual: 55, serious_funny: 30, respectful_irreverent: 10, matter_enthusiastic: 50 },
+        behavioral_dimensions: { concise_detailed: 40, conservative_risk: 45, deliberate_quick: 50 },
+        interpersonal_dimensions: { empathy: 95, patience: 85, energy: 55 },
+        technology_adoption: 50,
+        communication_tone: ['empathetic', 'compassionate', 'supportive'],
+        work_style: ['collaborative', 'supportive', 'empathetic'],
+        problem_solving_approach: ['empathetic approach', 'human-centered'],
+        learning_style: ['empathetic', 'collaborative'],
+        core_values: ['compassion', 'human connection', 'support'],
+        bias_awareness: ['empathy bias', 'emotional bias'],
+        growth_motivation: ['emotional growth', 'human development'],
+        leadership_style: ['empathetic', 'supportive'],
+        stress_responses: ['seeks emotional support', 'focuses on relationships'],
+        blind_spots: ['may be too emotional', 'can struggle with boundaries']
+    },
+    strategic: {
+        name: 'Strategic Advisor',
+        primary_traits: ['strategic', 'analytical', 'forward-thinking', 'systematic', 'calculated'],
+        cognitive_style: 'strategic',
+        core_motivations: ['strategic success', 'long-term planning', 'systematic advantage'],
+        decision_making_framework: 'Strategic analysis with long-term vision and systematic evaluation',
+        personality_dimensions: { passive_assertive: 70, pessimistic_optimistic: 55, closed_open: 60 },
+        tone_dimensions: { formal_casual: 40, serious_funny: 15, respectful_irreverent: 10, matter_enthusiastic: 40 },
+        behavioral_dimensions: { concise_detailed: 65, conservative_risk: 50, deliberate_quick: 30 },
+        interpersonal_dimensions: { empathy: 50, patience: 80, energy: 50 },
+        technology_adoption: 75,
+        communication_tone: ['strategic', 'analytical', 'systematic'],
+        work_style: ['strategic', 'systematic', 'planned'],
+        problem_solving_approach: ['strategic thinking', 'long-term planning'],
+        learning_style: ['strategic', 'systematic'],
+        core_values: ['strategic thinking', 'long-term vision', 'systematic advantage'],
+        bias_awareness: ['strategic bias', 'planning bias'],
+        growth_motivation: ['strategic growth', 'long-term development'],
+        leadership_style: ['strategic', 'systematic'],
+        stress_responses: ['focuses on strategy', 'seeks systematic solutions'],
+        blind_spots: ['may overthink', 'can be too calculated']
+    },
+    practical: {
+        name: 'Practical Problem Solver',
+        primary_traits: ['practical', 'efficient', 'solution-oriented', 'realistic', 'actionable'],
+        cognitive_style: 'practical',
+        core_motivations: ['practical solutions', 'efficiency', 'real-world application'],
+        decision_making_framework: 'Practical evaluation with real-world constraints and efficiency focus',
+        personality_dimensions: { passive_assertive: 60, pessimistic_optimistic: 55, closed_open: 65 },
+        tone_dimensions: { formal_casual: 50, serious_funny: 25, respectful_irreverent: 15, matter_enthusiastic: 45 },
+        behavioral_dimensions: { concise_detailed: 55, conservative_risk: 55, deliberate_quick: 60 },
+        interpersonal_dimensions: { empathy: 55, patience: 60, energy: 60 },
+        technology_adoption: 60,
+        communication_tone: ['practical', 'efficient', 'solution-focused'],
+        work_style: ['practical', 'efficient', 'action-oriented'],
+        problem_solving_approach: ['practical solutions', 'efficiency-focused'],
+        learning_style: ['practical', 'hands-on'],
+        core_values: ['practicality', 'efficiency', 'real-world application'],
+        bias_awareness: ['practical bias', 'efficiency bias'],
+        growth_motivation: ['practical growth', 'efficiency improvement'],
+        leadership_style: ['practical', 'efficient'],
+        stress_responses: ['focuses on solutions', 'seeks practical fixes'],
+        blind_spots: ['may ignore innovation', 'can be too focused on efficiency']
+    },
+    innovative: {
+        name: 'Innovative Explorer',
+        primary_traits: ['innovative', 'experimental', 'curious', 'adventurous', 'forward-thinking'],
+        cognitive_style: 'experimental',
+        core_motivations: ['innovation', 'exploration', 'discovery', 'breaking new ground'],
+        decision_making_framework: 'Experimental approach with innovation focus and discovery-oriented evaluation',
+        personality_dimensions: { passive_assertive: 65, pessimistic_optimistic: 80, closed_open: 90 },
+        tone_dimensions: { formal_casual: 65, serious_funny: 45, respectful_irreverent: 35, matter_enthusiastic: 75 },
+        behavioral_dimensions: { concise_detailed: 50, conservative_risk: 80, deliberate_quick: 65 },
+        interpersonal_dimensions: { empathy: 60, patience: 55, energy: 85 },
+        technology_adoption: 95,
+        communication_tone: ['innovative', 'experimental', 'forward-thinking'],
+        work_style: ['innovative', 'experimental', 'exploratory'],
+        problem_solving_approach: ['innovative solutions', 'experimental approach'],
+        learning_style: ['experimental', 'exploratory'],
+        core_values: ['innovation', 'exploration', 'discovery'],
+        bias_awareness: ['innovation bias', 'experimental bias'],
+        growth_motivation: ['innovative growth', 'exploratory development'],
+        leadership_style: ['innovative', 'experimental'],
+        stress_responses: ['seeks new approaches', 'explores alternatives'],
+        blind_spots: ['may ignore proven methods', 'can be too experimental']
+    },
+    collaborative: {
+        name: 'Collaborative Team Player',
+        primary_traits: ['collaborative', 'cooperative', 'team-oriented', 'supportive', 'inclusive'],
+        cognitive_style: 'collaborative',
+        core_motivations: ['collaboration', 'team success', 'collective achievement'],
+        decision_making_framework: 'Collaborative consensus-building with team input and collective evaluation',
+        personality_dimensions: { passive_assertive: 50, pessimistic_optimistic: 65, closed_open: 75 },
+        tone_dimensions: { formal_casual: 55, serious_funny: 35, respectful_irreverent: 15, matter_enthusiastic: 60 },
+        behavioral_dimensions: { concise_detailed: 50, conservative_risk: 50, deliberate_quick: 55 },
+        interpersonal_dimensions: { empathy: 80, patience: 75, energy: 65 },
+        technology_adoption: 60,
+        communication_tone: ['collaborative', 'cooperative', 'inclusive'],
+        work_style: ['collaborative', 'team-oriented', 'cooperative'],
+        problem_solving_approach: ['collaborative solutions', 'team-based approach'],
+        learning_style: ['collaborative', 'cooperative'],
+        core_values: ['collaboration', 'teamwork', 'inclusivity'],
+        bias_awareness: ['group bias', 'consensus bias'],
+        growth_motivation: ['collaborative growth', 'team development'],
+        leadership_style: ['collaborative', 'team-oriented'],
+        stress_responses: ['seeks team support', 'focuses on collaboration'],
+        blind_spots: ['may avoid conflict', 'can be too consensus-driven']
+    },
+    authoritative: {
+        name: 'Authoritative Leader',
+        primary_traits: ['authoritative', 'decisive', 'confident', 'direct', 'commanding'],
+        cognitive_style: 'authoritative',
+        core_motivations: ['leadership', 'authority', 'decisive action', 'command'],
+        decision_making_framework: 'Authoritative decision-making with confident judgment and direct action',
+        personality_dimensions: { passive_assertive: 85, pessimistic_optimistic: 60, closed_open: 50 },
+        tone_dimensions: { formal_casual: 35, serious_funny: 20, respectful_irreverent: 25, matter_enthusiastic: 50 },
+        behavioral_dimensions: { concise_detailed: 60, conservative_risk: 60, deliberate_quick: 70 },
+        interpersonal_dimensions: { empathy: 40, patience: 50, energy: 70 },
+        technology_adoption: 70,
+        communication_tone: ['authoritative', 'direct', 'confident'],
+        work_style: ['authoritative', 'decisive', 'commanding'],
+        problem_solving_approach: ['authoritative solutions', 'decisive action'],
+        learning_style: ['authoritative', 'direct'],
+        core_values: ['authority', 'leadership', 'decisiveness'],
+        bias_awareness: ['authority bias', 'confidence bias'],
+        growth_motivation: ['leadership growth', 'authority development'],
+        leadership_style: ['authoritative', 'commanding'],
+        stress_responses: ['takes command', 'makes decisive moves'],
+        blind_spots: ['may be too controlling', 'can ignore input']
+    },
+    balanced: {
+        name: 'Balanced Generalist',
+        primary_traits: ['balanced', 'adaptable', 'versatile', 'well-rounded', 'flexible'],
+        cognitive_style: 'balanced',
+        core_motivations: ['balance', 'adaptability', 'versatility', 'well-rounded approach'],
+        decision_making_framework: 'Balanced evaluation with adaptable approach and versatile consideration',
+        personality_dimensions: { passive_assertive: 50, pessimistic_optimistic: 50, closed_open: 50 },
+        tone_dimensions: { formal_casual: 50, serious_funny: 30, respectful_irreverent: 20, matter_enthusiastic: 50 },
+        behavioral_dimensions: { concise_detailed: 50, conservative_risk: 50, deliberate_quick: 50 },
+        interpersonal_dimensions: { empathy: 60, patience: 60, energy: 60 },
+        technology_adoption: 50,
+        communication_tone: ['balanced', 'adaptable', 'versatile'],
+        work_style: ['balanced', 'adaptable', 'versatile'],
+        problem_solving_approach: ['balanced approach', 'adaptable solutions'],
+        learning_style: ['balanced', 'versatile'],
+        core_values: ['balance', 'adaptability', 'versatility'],
+        bias_awareness: ['balanced awareness'],
+        growth_motivation: ['balanced growth', 'versatile development'],
+        leadership_style: ['balanced', 'adaptable'],
+        stress_responses: ['seeks balance', 'adapts approach'],
+        blind_spots: ['may lack specialization', 'can be too general']
+    }
+};
+
+// Load a preset configuration
+function loadPreset(presetId) {
+    if (!presets[presetId]) {
+        console.warn(`Preset not found: ${presetId}`);
+        return;
+    }
+    
+    const preset = presets[presetId];
+    
+    // Clear existing data first
+    Object.keys(personaData).forEach(key => {
+        if (key === 'tone_dimensions') {
+            personaData.tone_dimensions = {
+                formal_casual: 50,
+                serious_funny: 0,
+                respectful_irreverent: 0,
+                matter_enthusiastic: 0
+            };
+        } else if (key === 'personality_dimensions') {
+            personaData.personality_dimensions = {
+                passive_assertive: 50,
+                pessimistic_optimistic: 50,
+                closed_open: 50
+            };
+        } else if (key === 'behavioral_dimensions') {
+            personaData.behavioral_dimensions = {
+                concise_detailed: 50,
+                conservative_risk: 50,
+                deliberate_quick: 50
+            };
+        } else if (key === 'interpersonal_dimensions') {
+            personaData.interpersonal_dimensions = {
+                empathy: 50,
+                patience: 50,
+                energy: 50
+            };
+        } else if (key === 'technology_adoption') {
+            personaData.technology_adoption = 50;
+        } else if (key === 'name') {
+            personaData.name = '';
+        } else if (Array.isArray(personaData[key])) {
+            personaData[key] = [];
+        } else {
+            personaData[key] = '';
+        }
+    });
+    
+    // Apply preset data
+    Object.keys(preset).forEach(key => {
+        if (key === 'name') {
+            personaData.name = preset.name;
+            const nameInput = document.getElementById('persona-name');
+            if (nameInput) nameInput.value = preset.name;
+        } else if (key === 'tone_dimensions' || key === 'personality_dimensions' || 
+                   key === 'behavioral_dimensions' || key === 'interpersonal_dimensions') {
+            Object.assign(personaData[key], preset[key]);
+        } else {
+            personaData[key] = Array.isArray(preset[key]) ? [...preset[key]] : preset[key];
+        }
+    });
+    
+    // Update UI - sliders
+    document.querySelectorAll('.tone-slider').forEach(slider => {
+        const dimension = slider.dataset.dimension;
+        if (personaData.tone_dimensions[dimension] !== undefined) {
+            slider.value = personaData.tone_dimensions[dimension];
+        }
+    });
+    
+    document.querySelectorAll('.personality-slider').forEach(slider => {
+        const dimension = slider.dataset.dimension;
+        if (personaData.personality_dimensions[dimension] !== undefined) {
+            slider.value = personaData.personality_dimensions[dimension];
+        }
+    });
+    
+    document.querySelectorAll('.behavioral-slider').forEach(slider => {
+        const dimension = slider.dataset.dimension;
+        if (personaData.behavioral_dimensions[dimension] !== undefined) {
+            slider.value = personaData.behavioral_dimensions[dimension];
+        }
+    });
+    
+    document.querySelectorAll('.interpersonal-slider').forEach(slider => {
+        const dimension = slider.dataset.dimension;
+        if (personaData.interpersonal_dimensions[dimension] !== undefined) {
+            slider.value = personaData.interpersonal_dimensions[dimension];
+        }
+    });
+    
+    document.querySelectorAll('.tier1-slider').forEach(slider => {
+        const dimension = slider.dataset.dimension;
+        if (personaData[dimension] !== undefined) {
+            slider.value = personaData[dimension];
+        }
+    });
+    
+    updateTonePreview();
+    
+    // Update all trait displays
+    const singleSelectFields = [
+        'cognitive_style', 'crisis_response',
+        'influence_style', 'resource_relationship', 'time_orientation',
+        'collaboration_style'
+    ];
+    
+    const allChipFields = [
+        'primary_traits', 'cognitive_style', 'core_motivations',
+        'communication_tone', 'communication_sentence_structure', 
+        'work_style', 'problem_solving_approach', 'learning_style',
+        'core_values', 'bias_awareness', 'growth_motivation',
+        'cognitive_humanism', 'humanistic_cognition', 'self_actualization',
+        'behavioral_growth', 'crisis_response',
+        'influence_style', 'resource_relationship', 'time_orientation',
+        'collaboration_style', 'leadership_style', 'stress_responses', 
+        'blind_spots'
+    ];
+    
+    allChipFields.forEach(field => {
+        const isSingleSelect = singleSelectFields.includes(field);
+        updateTraitDisplay(field, isSingleSelect);
+    });
+    
+    // Update textarea
+    const decisionFramework = document.querySelector('[data-field="decision_making_framework"]');
+    if (decisionFramework && personaData.decision_making_framework) {
+        decisionFramework.value = personaData.decision_making_framework;
+    }
+    
+    updatePreview();
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 // Clear all selections
 function clearAll() {
     if (confirm('Clear all persona definitions?')) {
@@ -812,6 +1193,10 @@ function clearAll() {
         document.querySelectorAll('.trait-textarea').forEach(textarea => {
             textarea.value = '';
         });
+
+        // Clear name input
+        const nameInput = document.getElementById('persona-name');
+        if (nameInput) nameInput.value = '';
 
         document.querySelectorAll('.trait-option').forEach(option => {
             option.classList.remove('selected');
@@ -879,9 +1264,11 @@ function randomizePersona() {
                 patience: 50,
                 energy: 50
             };
-        } else if (key === 'technology_adoption') {
+            } else if (key === 'technology_adoption') {
             // Technology adoption is a slider, keep as number
             personaData.technology_adoption = 50;
+        } else if (key === 'name') {
+            personaData.name = '';
         } else if (Array.isArray(personaData[key])) {
             personaData[key] = [];
         } else {
@@ -1107,6 +1494,9 @@ function getTechnologyAdoptionLabel(value) {
 // Generate Markdown format
 function generateMarkdown() {
     let md = '# AI Agent Persona\n\n';
+    if (personaData.name) {
+        md += `## ${personaData.name}\n\n`;
+    }
     md += '** Generated by Persona Machine | https://raymassie.github.io/persona-machine/ **\n\n';
     md += '---\n\n';
 
@@ -1306,6 +1696,7 @@ function generateMarkdown() {
 // Generate JSON format
 function generateJSON() {
     const json = {
+        name: personaData.name || null,
         persona: {
             core_personality: {
                 personality_dimensions: personaData.personality_dimensions || null,
@@ -1371,6 +1762,10 @@ function generateJSON() {
 function generateYAML() {
     let yaml = '# AI Agent Persona\n';
     yaml += '# Generated by Persona Machine | https://raymassie.github.io/persona-machine/\n\n';
+    
+    if (personaData.name) {
+        yaml += `name: ${personaData.name}\n\n`;
+    }
     
     yaml += 'persona:\n';
     

@@ -34,6 +34,30 @@ Build custom AI agent personas using behavioral and psychological trait framewor
                 </div>
 
                 <div class="builder-content">
+                    <!-- Persona Name -->
+                    <div class="trait-group">
+                        <label>Persona Name</label>
+                        <input type="text" id="persona-name" class="persona-name-input" placeholder="Enter persona name (e.g., 'Analytical Assistant', 'Creative Helper')" data-field="name">
+                    </div>
+                    
+                    <!-- Presets -->
+                    <div class="trait-group">
+                        <label>Load Preset</label>
+                        <select id="preset-selector" class="preset-selector">
+                            <option value="">-- Select a preset --</option>
+                            <option value="analytical">Analytical Thinker</option>
+                            <option value="creative">Creative Visionary</option>
+                            <option value="motivational">Motivational Coach</option>
+                            <option value="empathetic">Empathetic Counselor</option>
+                            <option value="strategic">Strategic Advisor</option>
+                            <option value="practical">Practical Problem Solver</option>
+                            <option value="innovative">Innovative Explorer</option>
+                            <option value="collaborative">Collaborative Team Player</option>
+                            <option value="authoritative">Authoritative Leader</option>
+                            <option value="balanced">Balanced Generalist</option>
+                        </select>
+                    </div>
+                    
                     <!-- Core Personality Section -->
                     <div class="category-section" data-category="core">
                         <div class="category-header" onclick="toggleCategory('core')">
