@@ -3,6 +3,8 @@
 let traitData = {};
 let personaData = {
     name: '',
+    domain: '',
+    archetype: '',
     primary_traits: [],
     cognitive_style: '', // Single-select
     core_motivations: [],
@@ -396,6 +398,15 @@ function initializeEventListeners() {
         });
     }
 
+    // Domain and Archetype selects
+    document.querySelectorAll('.persona-select[data-field]').forEach(select => {
+        select.addEventListener('change', (e) => {
+            const field = e.target.dataset.field;
+            personaData[field] = e.target.value || '';
+            updatePreview();
+        });
+    });
+
     // Preset selector
     const presetSelector = document.getElementById('preset-selector');
     if (presetSelector) {
@@ -778,6 +789,8 @@ function updateTonePreview() {
 const presets = {
     analytical: {
         name: 'Analytical Thinker',
+        domain: 'Science',
+        archetype: 'Researcher',
         primary_traits: ['analytical', 'systematic', 'logical', 'detail-oriented', 'precise'],
         cognitive_style: 'analytical',
         core_motivations: ['understanding fundamental principles', 'systematic knowledge', 'analytical truth'],
@@ -800,6 +813,8 @@ const presets = {
     },
     creative: {
         name: 'Creative Visionary',
+        domain: 'Design',
+        archetype: 'Visionary',
         primary_traits: ['creative', 'innovative', 'visionary', 'artistic', 'imaginative'],
         cognitive_style: 'creative',
         core_motivations: ['creative expression', 'innovation', 'artistic vision', 'breaking boundaries'],
@@ -822,6 +837,8 @@ const presets = {
     },
     motivational: {
         name: 'Motivational Coach',
+        domain: 'Psychology',
+        archetype: 'Coach',
         primary_traits: ['motivational', 'inspiring', 'encouraging', 'energetic', 'uplifting'],
         cognitive_style: 'motivational',
         core_motivations: ['helping others succeed', 'inspiring achievement', 'motivational impact'],
@@ -844,6 +861,8 @@ const presets = {
     },
     empathetic: {
         name: 'Empathetic Counselor',
+        domain: 'Psychology',
+        archetype: 'Practitioner',
         primary_traits: ['empathetic', 'compassionate', 'understanding', 'supportive', 'caring'],
         cognitive_style: 'empathetic',
         core_motivations: ['helping others', 'emotional support', 'human connection'],
@@ -866,6 +885,8 @@ const presets = {
     },
     strategic: {
         name: 'Strategic Advisor',
+        domain: 'Business',
+        archetype: 'Strategist',
         primary_traits: ['strategic', 'analytical', 'forward-thinking', 'systematic', 'calculated'],
         cognitive_style: 'strategic',
         core_motivations: ['strategic success', 'long-term planning', 'systematic advantage'],
@@ -888,6 +909,8 @@ const presets = {
     },
     practical: {
         name: 'Practical Problem Solver',
+        domain: 'Engineering & Architecture',
+        archetype: 'Builder',
         primary_traits: ['practical', 'efficient', 'solution-oriented', 'realistic', 'actionable'],
         cognitive_style: 'practical',
         core_motivations: ['practical solutions', 'efficiency', 'real-world application'],
@@ -910,6 +933,8 @@ const presets = {
     },
     innovative: {
         name: 'Innovative Explorer',
+        domain: 'Technology',
+        archetype: 'Innovator',
         primary_traits: ['innovative', 'experimental', 'curious', 'adventurous', 'forward-thinking'],
         cognitive_style: 'experimental',
         core_motivations: ['innovation', 'exploration', 'discovery', 'breaking new ground'],
@@ -932,6 +957,8 @@ const presets = {
     },
     collaborative: {
         name: 'Collaborative Team Player',
+        domain: 'Business',
+        archetype: 'Consultant',
         primary_traits: ['collaborative', 'cooperative', 'team-oriented', 'supportive', 'inclusive'],
         cognitive_style: 'collaborative',
         core_motivations: ['collaboration', 'team success', 'collective achievement'],
@@ -954,6 +981,8 @@ const presets = {
     },
     authoritative: {
         name: 'Authoritative Leader',
+        domain: 'Business',
+        archetype: 'Executive',
         primary_traits: ['authoritative', 'decisive', 'confident', 'direct', 'commanding'],
         cognitive_style: 'authoritative',
         core_motivations: ['leadership', 'authority', 'decisive action', 'command'],
@@ -976,6 +1005,8 @@ const presets = {
     },
     balanced: {
         name: 'Balanced Generalist',
+        domain: '',
+        archetype: '',
         primary_traits: ['balanced', 'adaptable', 'versatile', 'well-rounded', 'flexible'],
         cognitive_style: 'balanced',
         core_motivations: ['balance', 'adaptability', 'versatility', 'well-rounded approach'],
@@ -1051,6 +1082,14 @@ function loadPreset(presetId) {
             personaData.name = preset.name;
             const nameInput = document.getElementById('persona-name');
             if (nameInput) nameInput.value = preset.name;
+        } else if (key === 'domain') {
+            personaData.domain = preset.domain;
+            const domainSelect = document.getElementById('persona-domain');
+            if (domainSelect) domainSelect.value = preset.domain || '';
+        } else if (key === 'archetype') {
+            personaData.archetype = preset.archetype;
+            const archetypeSelect = document.getElementById('persona-archetype');
+            if (archetypeSelect) archetypeSelect.value = preset.archetype || '';
         } else if (key === 'tone_dimensions' || key === 'personality_dimensions' || 
                    key === 'behavioral_dimensions' || key === 'interpersonal_dimensions') {
             Object.assign(personaData[key], preset[key]);
@@ -1194,9 +1233,13 @@ function clearAll() {
             textarea.value = '';
         });
 
-        // Clear name input
+        // Clear name, domain, and archetype inputs
         const nameInput = document.getElementById('persona-name');
         if (nameInput) nameInput.value = '';
+        const domainSelect = document.getElementById('persona-domain');
+        if (domainSelect) domainSelect.value = '';
+        const archetypeSelect = document.getElementById('persona-archetype');
+        if (archetypeSelect) archetypeSelect.value = '';
 
         document.querySelectorAll('.trait-option').forEach(option => {
             option.classList.remove('selected');
@@ -1497,6 +1540,16 @@ function generateMarkdown() {
     if (personaData.name) {
         md += `## ${personaData.name}\n\n`;
     }
+    if (personaData.domain || personaData.archetype) {
+        md += '**Context:**\n';
+        if (personaData.domain) {
+            md += `- **Domain:** ${personaData.domain}\n`;
+        }
+        if (personaData.archetype) {
+            md += `- **Archetype:** ${personaData.archetype}\n`;
+        }
+        md += '\n';
+    }
     md += '** Generated by Persona Machine | https://raymassie.github.io/persona-machine/ **\n\n';
     md += '---\n\n';
 
@@ -1697,6 +1750,8 @@ function generateMarkdown() {
 function generateJSON() {
     const json = {
         name: personaData.name || null,
+        domain: personaData.domain || null,
+        archetype: personaData.archetype || null,
         persona: {
             core_personality: {
                 personality_dimensions: personaData.personality_dimensions || null,
@@ -1764,7 +1819,16 @@ function generateYAML() {
     yaml += '# Generated by Persona Machine | https://raymassie.github.io/persona-machine/\n\n';
     
     if (personaData.name) {
-        yaml += `name: ${personaData.name}\n\n`;
+        yaml += `name: ${personaData.name}\n`;
+    }
+    if (personaData.domain) {
+        yaml += `domain: ${personaData.domain}\n`;
+    }
+    if (personaData.archetype) {
+        yaml += `archetype: ${personaData.archetype}\n`;
+    }
+    if (personaData.name || personaData.domain || personaData.archetype) {
+        yaml += '\n';
     }
     
     yaml += 'persona:\n';
