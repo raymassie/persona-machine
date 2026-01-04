@@ -23,6 +23,16 @@ Persona Machine helps you build comprehensive personality profiles for AI agents
 
 ## Key Features
 
+### 👤 Persona Identity
+- **Name Input**: Give your persona a custom name
+- **Domain Selection**: Choose from 29 domains (Technology, Design, Psychology, Business, etc.)
+- **Archetype Selection**: Select from 37 role-based archetypes (Visionary, Scholar, Coach, etc.)
+- **10 Personality Presets**: Quick-start templates for common personality types:
+  - Analytical Thinker, Creative Visionary, Motivational Coach
+  - Empathetic Counselor, Strategic Advisor, Practical Problem Solver
+  - Innovative Explorer, Collaborative Team Player, Authoritative Leader
+  - Balanced Generalist
+
 ### 🎯 Comprehensive Trait Selection
 - **26 Behavioral Categories**: From core personality to stress responses
 - **Hierarchical Grouping**: Large trait lists automatically organized (e.g., "building (15)", "understanding (12)")
@@ -39,9 +49,9 @@ Control oppositional dimensions with visual sliders:
 
 ### 📊 Real-Time Preview
 Watch your persona generate in real-time as you make selections. Switch between formats instantly:
-- **Markdown**: Human-readable format perfect for documentation
-- **JSON**: Structured data for programmatic use
-- **YAML**: Clean format popular in AI/ML configurations
+- **Markdown**: Human-readable format with name, domain, archetype, and all traits
+- **JSON**: Structured data with complete persona metadata for programmatic use
+- **YAML**: Clean format popular in AI/ML configurations with full context
 
 ### 🚀 Export & Share
 - **Copy to Clipboard**: One-click copying for immediate use
@@ -51,7 +61,11 @@ Watch your persona generate in real-time as you make selections. Switch between 
 ## How to Use
 
 1. **Visit the [Live Demo](https://raymassie.github.io/persona-machine/)**
-2. **Select Traits**: 
+2. **Set Identity** (optional):
+   - Enter a persona name
+   - Select a domain and archetype
+   - Or load a preset to start with a pre-configured personality
+3. **Select Traits**: 
    - Click any search field (e.g., "Core Motivations")
    - Type to filter or click options to select
    - For grouped fields, click headers like "building (15)" to expand/collapse
@@ -62,6 +76,7 @@ Watch your persona generate in real-time as you make selections. Switch between 
 6. **Export**: Copy or download your persona
 
 ### Quick Actions
+- **Load Preset**: Choose from 10 pre-configured personality types
 - **RANDOM**: Generate a random persona configuration
 - **CLEAR ALL**: Reset all selections
 
