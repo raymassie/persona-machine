@@ -1,6 +1,7 @@
 // Persona Machine - Main Application Logic
 
 let traitData = {};
+let traitIndex = {}; // Domain/archetype -> traits mapping
 let personaData = {
     name: '',
     domain: '',
@@ -54,11 +55,30 @@ let personaData = {
 };
 
 // Initialize on DOM load
-document.addEventListener('DOMContentLoaded', function() {
-    loadTraitData();
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadTraitIndex();
+    await loadTraitData();
     initializeEventListeners();
     initializeCategories();
 });
+
+// Load trait index (domain/archetype -> traits mapping)
+async function loadTraitIndex() {
+    try {
+        const response = await fetch('trait-index.json');
+        if (!response.ok) {
+            console.warn('⚠️ Trait index not found, domain/archetype filtering will be disabled');
+            return;
+        }
+        traitIndex = await response.json();
+        console.log('✅ Trait index loaded:', {
+            domains: traitIndex.metadata?.domains || 0,
+            archetypes: traitIndex.metadata?.archetypes || 0
+        });
+    } catch (error) {
+        console.warn('⚠️ Could not load trait index:', error);
+    }
+}
 
 // Load trait data from JSON file
 async function loadTraitData() {
@@ -136,6 +156,72 @@ function groupTraitsByRoot(traits) {
     return { groups: filteredGroups, standalone: standalone.sort() };
 }
 
+// Get filtered traits for a field based on domain/archetype
+function getFilteredTraits(field, allTraits) {
+    if (!traitIndex || !traitIndex.domain || !traitIndex.archetype) {
+        return allTraits; // No filtering if index not loaded
+    }
+    
+    const domain = personaData.domain;
+    const archetype = personaData.archetype;
+    
+    if (!domain && !archetype) {
+        return allTraits; // No filtering if neither selected
+    }
+    
+    // Map field names to index category names
+    const fieldToCategory = {
+        'primary_traits': 'primary_traits',
+        'core_motivations': 'core_motivations',
+        'cognitive_style': 'cognitive_style',
+        'communication_tone': 'communication_tone',
+        'communication_sentence_structure': 'communication_sentence_structure',
+        'work_style': 'work_style',
+        'problem_solving_approach': 'problem_solving_approach',
+        'learning_style': 'learning_style',
+        'core_values': 'core_values',
+        'leadership_style': 'leadership_style',
+        'stress_responses': 'stress_responses',
+        'blind_spots': 'blind_spots'
+    };
+    
+    const category = fieldToCategory[field];
+    if (!category) {
+        return allTraits; // Field not in index, return all
+    }
+    
+    // Collect traits from domain and archetype
+    const filteredTraits = new Set();
+    
+    if (domain && traitIndex.domain[domain] && traitIndex.domain[domain][category]) {
+        traitIndex.domain[domain][category].forEach(trait => {
+            // Match case-insensitive
+            const matchingTrait = allTraits.find(t => t.toLowerCase() === trait);
+            if (matchingTrait) {
+                filteredTraits.add(matchingTrait);
+            }
+        });
+    }
+    
+    if (archetype && traitIndex.archetype[archetype] && traitIndex.archetype[archetype][category]) {
+        traitIndex.archetype[archetype][category].forEach(trait => {
+            const matchingTrait = allTraits.find(t => t.toLowerCase() === trait);
+            if (matchingTrait) {
+                filteredTraits.add(matchingTrait);
+            }
+        });
+    }
+    
+    // If we have filtered traits, return them (sorted), otherwise return all
+    if (filteredTraits.size > 0) {
+        const filtered = Array.from(filteredTraits).sort();
+        console.log(`🔍 Filtered ${field}: ${allTraits.length} -> ${filtered.length} traits (domain: ${domain || 'none'}, archetype: ${archetype || 'none'})`);
+        return filtered;
+    }
+    
+    return allTraits;
+}
+
 // Populate all selectors with trait options
 function populateSelectors() {
     // Fields that benefit from grouping (large lists with patterns)
@@ -184,13 +270,15 @@ function populateSelectors() {
         optionsContainer.innerHTML = '';
         
         const allOptions = traitData[field];
-        const useGrouping = groupedFields.includes(field) && allOptions.length >= 25;
+        // Filter traits based on domain/archetype
+        const filteredOptions = getFilteredTraits(field, allOptions);
+        const useGrouping = groupedFields.includes(field) && filteredOptions.length >= 25;
         
-        console.log(`🔍 Field: ${field}, In groupedFields: ${groupedFields.includes(field)}, Length: ${allOptions.length}, Will use grouping: ${useGrouping}`);
+        console.log(`🔍 Field: ${field}, In groupedFields: ${groupedFields.includes(field)}, Length: ${filteredOptions.length}, Will use grouping: ${useGrouping}`);
         
         if (useGrouping) {
             // Use grouped/progressive display
-            const { groups, standalone } = groupTraitsByRoot(allOptions);
+            const { groups, standalone } = groupTraitsByRoot(filteredOptions);
             console.log(`✅ Populating ${field} with grouped display: ${Object.keys(groups).length} groups, ${standalone.length} standalone`);
             
             const optionsWrapper = document.createElement('div');
@@ -403,6 +491,8 @@ function initializeEventListeners() {
         select.addEventListener('change', (e) => {
             const field = e.target.dataset.field;
             personaData[field] = e.target.value || '';
+            // Repopulate selectors to apply trait filtering
+            populateSelectors();
             updatePreview();
         });
     });
