@@ -355,9 +355,9 @@ function populateSelectors() {
         } else {
             // Use simple progressive display (first 50, then show all)
             const maxInitialDisplay = 50;
-            const hasMore = allOptions.length > maxInitialDisplay;
+            const hasMore = filteredOptions.length > maxInitialDisplay;
             
-            console.log(`✅ Populating ${field} with ${allOptions.length} options (showing ${Math.min(maxInitialDisplay, allOptions.length)} initially)`);
+            console.log(`✅ Populating ${field} with ${filteredOptions.length} options (showing ${Math.min(maxInitialDisplay, filteredOptions.length)} initially)`);
             
             const optionsWrapper = document.createElement('div');
             optionsWrapper.className = 'trait-options-wrapper';
@@ -366,7 +366,7 @@ function populateSelectors() {
             if (hasMore) {
                 const showAllBtn = document.createElement('button');
                 showAllBtn.className = 'show-all-btn';
-                showAllBtn.textContent = `Show All (${allOptions.length} total)`;
+                showAllBtn.textContent = `Show All (${filteredOptions.length} total)`;
                 showAllBtn.type = 'button';
                 showAllBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -374,7 +374,7 @@ function populateSelectors() {
                     
                     if (isExpanded) {
                         optionsWrapper.classList.remove('expanded');
-                        showAllBtn.textContent = `Show All (${allOptions.length} total)`;
+                        showAllBtn.textContent = `Show All (${filteredOptions.length} total)`;
                         optionsWrapper.querySelectorAll('.trait-option').forEach((option, index) => {
                             option.style.display = index < maxInitialDisplay ? 'block' : 'none';
                         });
@@ -389,7 +389,7 @@ function populateSelectors() {
                 optionsContainer.appendChild(showAllBtn);
             }
             
-            allOptions.forEach((trait, index) => {
+            filteredOptions.forEach((trait, index) => {
                 const option = document.createElement('div');
                 option.className = 'trait-option';
                 option.textContent = trait;
